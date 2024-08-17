@@ -1,9 +1,11 @@
 package usecase
 
 import (
+	"errors"
+
+	"github.com/desulaidovich/pretty-link/auth/models"
 	"github.com/desulaidovich/pretty-link/auth/repository"
 	"github.com/jmoiron/sqlx"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthUseCase struct {
@@ -19,10 +21,16 @@ func New(db *sqlx.DB) *AuthUseCase {
 }
 
 func (auth *AuthUseCase) SignIn(email, password string) error {
-	_, err := auth.repo.GetByEmail(email)
+	account := &models.Account{
+		Email: email,
+	}
 
-	if err != nil {
+	if err := auth.repo.GetByEmail(account); err != nil {
 		return err
+	}
+
+	if !account.CheckPasswordHash(password) {
+		return errors.New("разных хэш крч))")
 	}
 
 	return nil
@@ -30,14 +38,15 @@ func (auth *AuthUseCase) SignIn(email, password string) error {
 
 func (auth *AuthUseCase) SignUp(email, password string) error {
 
-	passwd := []byte(password)
-	passwd, err := bcrypt.GenerateFromPassword(passwd, bcrypt.DefaultCost)
+	account := &models.Account{
+		Email: email,
+	}
 
-	if err != nil {
+	if err := account.HashPasswordFromString(password); err != nil {
 		return err
 	}
 
-	if err := auth.repo.Create(email, string(passwd)); err != nil {
+	if err := auth.repo.Create(account); err != nil {
 		return err
 	}
 
