@@ -19,9 +19,12 @@ func Run() error {
 	}
 
 	db, err := connectDB(cfg)
+
 	if err != nil {
 		return err
 	}
+
+	defer db.Close()
 
 	mux := http.NewServeMux()
 
