@@ -13,7 +13,8 @@
 			],
 			"env": {
 				"APP_NAME": "Pretty Link",
-				"HTTP_PORT": "8080"
+				"HTTP_PORT": "8080",
+				"DB_CONNECTION": "postgresql://tony:ynot@localhost:5432/prettylink"
 			}
 		}
 	]

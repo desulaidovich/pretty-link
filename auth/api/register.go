@@ -9,6 +9,6 @@ import (
 func RegisterAuthEndpoints(mux *http.ServeMux, uc auth.UseCase) {
 	h := New(uc)
 
-	mux.HandleFunc("/signin", h.SignIn)
-	mux.HandleFunc("/signup", h.SignUp)
+	mux.HandleFunc("POST /signin", h.SignIn)
+	mux.HandleFunc("POST /signup", h.SignUp)
 }

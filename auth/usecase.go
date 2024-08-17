@@ -1,6 +1,6 @@
 package auth
 
 type UseCase interface {
-	SignIn() error
-	SignUp() error
+	SignIn(email, password string) (string, error)
+	SignUp(email, password string) error
 }

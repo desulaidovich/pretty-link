@@ -1,6 +1,8 @@
 package api
 
 import (
+	"encoding/json"
+	"io"
 	"net/http"
 
 	"github.com/desulaidovich/pretty-link/auth"
@@ -17,16 +19,62 @@ func New(usecase auth.UseCase) *AuthHandler {
 	return handler
 }
 
-func (h *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
-	if err := h.usecase.SignUp(); err != nil {
-		// ok
+type (
+	reqeust struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
 	}
-	w.Write([]byte("signup"))
+
+	response struct {
+		Message string `json:"message"`
+	}
+)
+
+func (auth *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
+	defer r.Body.Close()
+
+	if err != nil {
+		asd, _ := json.Marshal(response{
+			Message: err.Error(),
+		})
+		w.Write(asd)
+		return
+	}
+
+	var req reqeust
+	if err := json.Unmarshal(body, &req); err != nil {
+		asd, _ := json.Marshal(response{
+			Message: err.Error(),
+		})
+		w.Write(asd)
+		return
+	}
+
+	if err := auth.usecase.SignUp(req.Email, req.Password); err != nil {
+		asd, _ := json.Marshal(response{
+			Message: err.Error(),
+		})
+		w.Write(asd)
+		return
+	}
+
+	asd, _ := json.Marshal(response{
+		Message: "Ok",
+	})
+	w.Write(asd)
 }
 
-func (h *AuthHandler) SignIn(w http.ResponseWriter, r *http.Request) {
-	if err := h.usecase.SignIn(); err != nil {
-		// ok
-	}
-	w.Write([]byte("signin"))
+func (auth *AuthHandler) SignIn(w http.ResponseWriter, r *http.Request) {
+	// body, err := io.ReadAll(r.Body)
+	// defer r.Body.Close()
+
+	// if err != nil {
+	// 	return
+	// }
+
+	// var req reqeust
+	// if err := json.Unmarshal(body, &req); err != nil {
+	// 	return
+	// }
 }
