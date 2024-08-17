@@ -7,8 +7,8 @@ import (
 )
 
 func RegisterAuthEndpoints(mux *http.ServeMux, uc auth.UseCase) {
-	h := New(uc)
+	handler := New(uc)
 
-	mux.HandleFunc("POST /signin", h.SignIn)
-	mux.HandleFunc("POST /signup", h.SignUp)
+	mux.HandleFunc("POST /signin", handler.SignIn)
+	mux.HandleFunc("POST /signup", handler.SignUp)
 }

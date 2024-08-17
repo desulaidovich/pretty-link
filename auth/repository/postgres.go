@@ -15,7 +15,7 @@ func (sql *Postgres) New(db *sqlx.DB) *Postgres {
 	return postgres
 }
 
-func (sql *Postgres) CreateAccount(email, password string) error {
+func (sql *Postgres) Create(email, password string) error {
 	_, err := sql.DB.Exec(`INSERT INTO public.account (email, password)
 		VALUES ($1, $2);`, email, password)
 
@@ -26,6 +26,6 @@ func (sql *Postgres) CreateAccount(email, password string) error {
 	return nil
 }
 
-// func (sql *Postgres) exist(email string) bool {
-
-// }
+func (sql *Postgres) GetByEmail(email string) (string, error) {
+	return "", nil
+}

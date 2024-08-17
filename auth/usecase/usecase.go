@@ -3,6 +3,7 @@ package usecase
 import (
 	"github.com/desulaidovich/pretty-link/auth/repository"
 	"github.com/jmoiron/sqlx"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthUseCase struct {
@@ -17,12 +18,26 @@ func New(db *sqlx.DB) *AuthUseCase {
 	return useCase
 }
 
-func (auth *AuthUseCase) SignIn(email, password string) (string, error) {
-	return "", nil
+func (auth *AuthUseCase) SignIn(email, password string) error {
+	_, err := auth.repo.GetByEmail(email)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (auth *AuthUseCase) SignUp(email, password string) error {
-	if err := auth.repo.CreateAccount(email, password); err != nil {
+
+	passwd := []byte(password)
+	passwd, err := bcrypt.GenerateFromPassword(passwd, bcrypt.DefaultCost)
+
+	if err != nil {
+		return err
+	}
+
+	if err := auth.repo.Create(email, string(passwd)); err != nil {
 		return err
 	}
 

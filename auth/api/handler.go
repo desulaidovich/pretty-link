@@ -19,62 +19,53 @@ func New(usecase auth.UseCase) *AuthHandler {
 	return handler
 }
 
-type (
-	reqeust struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
-
-	response struct {
-		Message string `json:"message"`
-	}
-)
+type reqeust struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
 
 func (auth *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	defer r.Body.Close()
 
 	if err != nil {
-		asd, _ := json.Marshal(response{
-			Message: err.Error(),
-		})
-		w.Write(asd)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	var req reqeust
 	if err := json.Unmarshal(body, &req); err != nil {
-		asd, _ := json.Marshal(response{
-			Message: err.Error(),
-		})
-		w.Write(asd)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	if err := auth.usecase.SignUp(req.Email, req.Password); err != nil {
-		asd, _ := json.Marshal(response{
-			Message: err.Error(),
-		})
-		w.Write(asd)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	asd, _ := json.Marshal(response{
-		Message: "Ok",
-	})
-	w.Write(asd)
+	w.WriteHeader(http.StatusOK)
 }
 
 func (auth *AuthHandler) SignIn(w http.ResponseWriter, r *http.Request) {
-	// body, err := io.ReadAll(r.Body)
-	// defer r.Body.Close()
+	body, err := io.ReadAll(r.Body)
+	defer r.Body.Close()
 
-	// if err != nil {
-	// 	return
-	// }
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
-	// var req reqeust
-	// if err := json.Unmarshal(body, &req); err != nil {
-	// 	return
-	// }
+	var req reqeust
+	if err := json.Unmarshal(body, &req); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if err := auth.usecase.SignIn(req.Email, req.Password); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
