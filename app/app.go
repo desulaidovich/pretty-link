@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/desulaidovich/pretty-link/auth/api"
-	"github.com/desulaidovich/pretty-link/auth/usecase"
+	auth "github.com/desulaidovich/pretty-link/auth/usecase"
 	"github.com/desulaidovich/pretty-link/config"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -28,8 +28,8 @@ func Run() error {
 
 	mux := http.NewServeMux()
 
-	auth := usecase.New(db)
-	api.RegisterAuthEndpoints(mux, auth)
+	authUseCase := auth.New(db)
+	api.RegisterAuthEndpoints(mux, authUseCase)
 
 	server := new(http.Server)
 	server.Addr = ":" + cfg.Port

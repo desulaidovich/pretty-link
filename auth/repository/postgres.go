@@ -25,9 +25,7 @@ func (sql *Postgres) Create(account *models.Account) error {
 	}
 
 	for rows.Next() {
-		err = rows.StructScan(account)
-
-		if err != nil {
+		if err = rows.StructScan(account); err != nil {
 			return err
 		}
 	}
@@ -44,9 +42,7 @@ func (sql *Postgres) GetByEmail(account *models.Account) error {
 	}
 
 	for rows.Next() {
-		err = rows.StructScan(account)
-
-		if err != nil {
+		if err = rows.StructScan(account); err != nil {
 			return err
 		}
 	}

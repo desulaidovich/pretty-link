@@ -21,9 +21,8 @@ func New(db *sqlx.DB) *AuthUseCase {
 }
 
 func (auth *AuthUseCase) SignIn(email, password string) error {
-	account := &models.Account{
-		Email: email,
-	}
+	account := new(models.Account)
+	account.Email = email
 
 	if err := auth.repo.GetByEmail(account); err != nil {
 		return err
@@ -37,10 +36,8 @@ func (auth *AuthUseCase) SignIn(email, password string) error {
 }
 
 func (auth *AuthUseCase) SignUp(email, password string) error {
-
-	account := &models.Account{
-		Email: email,
-	}
+	account := new(models.Account)
+	account.Email = email
 
 	if err := account.HashPasswordFromString(password); err != nil {
 		return err
