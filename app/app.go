@@ -3,17 +3,12 @@ package app
 import (
 	"net/http"
 
-	"github.com/desulaidovich/pretty-link/auth"
 	"github.com/desulaidovich/pretty-link/auth/request"
 	"github.com/desulaidovich/pretty-link/auth/usecase"
 	"github.com/desulaidovich/pretty-link/config"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 )
-
-type App struct {
-	authUseCase auth.UseCase
-}
 
 func Run() error {
 
