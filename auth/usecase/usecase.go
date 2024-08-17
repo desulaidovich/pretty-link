@@ -8,6 +8,10 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+var (
+	errIncorrectUserPassword = errors.New("incorrect user password")
+)
+
 type AuthUseCase struct {
 	repo *repository.Postgres
 }
@@ -29,7 +33,7 @@ func (auth *AuthUseCase) SignIn(email, password string) error {
 	}
 
 	if !account.CheckPasswordHash(password) {
-		return errors.New("разных хэш крч))")
+		return errIncorrectUserPassword
 	}
 
 	return nil
