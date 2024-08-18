@@ -8,14 +8,10 @@
 			"mode": "auto",
 			"logOutput": "dap",
 			"program": "${workspaceFolder}/cmd/main.go",
+			"envFile": "${workspaceFolder}/.env",
 			"args": [
 				""
 			],
-			"env": {
-				"APP_NAME": "Pretty Link",
-				"HTTP_PORT": "8080",
-				"DB_CONNECTION": "postgresql://tony:ynot@localhost:5432/prettylink"
-			}
 		}
 	]
 }
