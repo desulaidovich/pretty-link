@@ -1,4 +1,7 @@
 {
+    "files.exclude": {
+        "**/*.example.json": true,
+    },
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true,
     "editor.tabSize": 2,
@@ -8,7 +11,7 @@
     "files.trimTrailingWhitespace": true,
     "editor.rulers": [
         {
-            "column": 80,
+            "column": 100,
             "color": "#bbbbbb"
         }
     ],

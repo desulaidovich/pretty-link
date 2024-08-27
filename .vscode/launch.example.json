@@ -1,0 +1,21 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Debug: Pretty Link",
+			"type": "go",
+			"request": "launch",
+			"mode": "auto",
+			"logOutput": "dap",
+			"program": "${workspaceFolder}/cmd/main.go",
+			"env": {
+				"APP_NAME": "",
+				"HTTP_PORT": "",
+				"DB_CONNECTION": "postgresql://NAME:PASSWORD@HOST:PORT/DB_NAME?sslmode=disable"
+			},
+			"args": [
+				""
+			],
+		}
+	]
+}

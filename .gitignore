@@ -1,2 +1,4 @@
-# env file
-.env
+# config
+.vscode/tasks.json
+.vscode/launch.json
+

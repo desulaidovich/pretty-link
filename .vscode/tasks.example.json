@@ -1,0 +1,22 @@
+{
+	"version": "2.0.0",
+	"type": "shell",
+	"command": "go",
+	"options": {
+		"env": {
+			"APP_NAME": "",
+			"HTTP_PORT": "",
+			"DB_CONNECTION": "postgresql://NAME:PASSWORD@HOST:PORT/DB_NAME?sslmode=disable"
+		}
+	},
+	"tasks": [
+		{
+			"label": "Run: Pretty Link",
+			"args": [
+				"run",
+				"${workspaceFolder}/cmd/main.go"
+			],
+			"group": "build",
+		}
+	]
+}
