@@ -1,14 +1,14 @@
 package app
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/desulaidovich/pretty-link/auth/api"
-	auth "github.com/desulaidovich/pretty-link/auth/usecase"
+	"github.com/desulaidovich/pretty-link/auth/usecase"
 	"github.com/desulaidovich/pretty-link/config"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
-	"github.com/jmoiron/sqlx"
 )
 
 func Run() error {
@@ -18,7 +18,7 @@ func Run() error {
 		return err
 	}
 
-	db, err := connectDB(cfg)
+	db, err := databaseInit(cfg)
 
 	if err != nil {
 		return err
@@ -28,7 +28,7 @@ func Run() error {
 
 	mux := http.NewServeMux()
 
-	authUseCase := auth.New(db)
+	authUseCase := usecase.NewAuthUseCase(db)
 	api.RegisterAuthEndpoints(mux, authUseCase)
 
 	server := new(http.Server)
@@ -42,8 +42,8 @@ func Run() error {
 	return nil
 }
 
-func connectDB(cfg *config.Config) (*sqlx.DB, error) {
-	db, err := sqlx.Connect("pgx", cfg.ConnectionString)
+func databaseInit(cfg *config.Config) (*sql.DB, error) {
+	db, err := sql.Open("pgx", cfg.ConnectionString)
 
 	if err != nil {
 		return nil, err

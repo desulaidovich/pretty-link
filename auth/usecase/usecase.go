@@ -1,11 +1,11 @@
 package usecase
 
 import (
+	"database/sql"
 	"errors"
 
 	"github.com/desulaidovich/pretty-link/auth/models"
 	"github.com/desulaidovich/pretty-link/auth/repository"
-	"github.com/jmoiron/sqlx"
 )
 
 var (
@@ -16,7 +16,7 @@ type AuthUseCase struct {
 	repo *repository.Postgres
 }
 
-func New(db *sqlx.DB) *AuthUseCase {
+func NewAuthUseCase(db *sql.DB) *AuthUseCase {
 	useCase := new(AuthUseCase)
 	postgres := new(repository.Postgres)
 	useCase.repo = postgres.New(db)
@@ -28,7 +28,9 @@ func (auth *AuthUseCase) SignIn(email, password string) error {
 	account := new(models.Account)
 	account.Email = email
 
-	if err := auth.repo.GetByEmail(account); err != nil {
+	account, err := auth.repo.GetByEmail(account)
+
+	if err != nil {
 		return err
 	}
 
