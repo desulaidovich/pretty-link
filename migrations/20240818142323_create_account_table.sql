@@ -12,4 +12,4 @@ CREATE TABLE account (
 -- +goose Down
 -- +goose StatementBegin
 DROP TABLE IF EXISTS account CASCADE;
--- +goose StatementEndclea
+-- +goose StatementEnd
