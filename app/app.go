@@ -38,8 +38,8 @@ func Run() error {
 
 	mux := http.NewServeMux()
 
-	authUseCase := usecase.NewAuthUseCase(db)
-	api.RegisterAuthEndpoints(mux, authUseCase(logger))
+	authUseCase := usecase.NewAuthUseCase(db)(logger)
+	api.RegisterAuthEndpoints(mux, authUseCase)
 
 	server := new(http.Server)
 	server.Addr = ":" + cfg.Port
