@@ -43,7 +43,7 @@ func Run() error {
 
 	server := new(http.Server)
 	server.Addr = ":" + cfg.Port
-	server.Handler = middleware.New(logger)(mux)
+	server.Handler = middleware.New(mux)(logger)
 
 	logger.Info("Appication "+cfg.Name+" starting",
 		slog.String("port", cfg.Port),

@@ -5,10 +5,10 @@ import (
 	"net/http"
 )
 
-func New(logger *slog.Logger) func(http.Handler) http.Handler {
-	return func(h http.Handler) http.Handler {
+func New(h http.Handler) func(*slog.Logger) http.Handler {
+	return func(l *slog.Logger) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			logger.Info("Middleware",
+			l.Info("Middleware",
 				slog.String("Method", r.Method),
 				slog.String("Host", r.Host),
 				slog.String("Path", r.URL.Path),
