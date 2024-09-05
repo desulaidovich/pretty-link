@@ -26,12 +26,10 @@ type reqeust struct {
 
 func (auth *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
 	defer r.Body.Close()
 
 	var req reqeust
@@ -50,12 +48,10 @@ func (auth *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
 
 func (auth *AuthHandler) SignIn(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
 	defer r.Body.Close()
 
 	var req reqeust

@@ -1,34 +1,40 @@
 {
-    "files.exclude": {
-        "**/*.example.json": true,
-    },
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true,
-    "editor.detectIndentation": true,
-    "files.insertFinalNewline": true,
-    "files.trimTrailingWhitespace": true,
-    "editor.rulers": [
-        {
-            "column": 100,
-            "color": "#bbbbbb"
-        }
-    ],
-    "gopls": {
-        "ui.semanticTokens": true,
-        "ui.noSemanticString": true,
-        "ui.noSemanticNumber": true,
-    },
-    "go.delveConfig": {
-        "debugAdapter": "dlv-dap",
-    },
-    "go.formatTool": "gofmt",
-    "go.inlayHints.assignVariableTypes": true,
-    "go.inlayHints.compositeLiteralFields": true,
-    "go.inlayHints.compositeLiteralTypes": true,
-    "go.inlayHints.constantValues": true,
-    "go.inlayHints.functionTypeParameters": true,
-    "go.inlayHints.parameterNames": true,
-    "go.inlayHints.rangeVariableTypes": true
+	"files.exclude": {
+		// "**/*.example.json": true,
+	},
+	"task.autoDetect": "off",
+	"editor.formatOnSave": true,
+	"editor.formatOnPaste": true,
+	"editor.insertSpaces": true,
+	"editor.detectIndentation": true,
+	"[jsonc]": {
+		"editor.tabSize": 2,
+	},
+	"[go]": {
+		"editor.tabSize": 4,
+		"editor.rulers": [
+			{
+				"column": 120,
+				"color": "#bbbbbb"
+			}
+		],
+	},
+	"files.insertFinalNewline": true,
+	"files.trimTrailingWhitespace": true,
+	"gopls": {
+		"ui.semanticTokens": true,
+		"ui.noSemanticString": true,
+		"ui.noSemanticNumber": true,
+	},
+	"go.delveConfig": {
+		"debugAdapter": "dlv-dap",
+	},
+	"go.formatTool": "gofmt",
+	"go.inlayHints.assignVariableTypes": false,
+	"go.inlayHints.compositeLiteralFields": true,
+	"go.inlayHints.compositeLiteralTypes": true,
+	"go.inlayHints.constantValues": true,
+	"go.inlayHints.functionTypeParameters": true,
+	"go.inlayHints.parameterNames": true,
+	"go.inlayHints.rangeVariableTypes": true
 }

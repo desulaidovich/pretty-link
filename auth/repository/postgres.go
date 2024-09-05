@@ -23,7 +23,6 @@ func (p *Postgres) Create(account *models.Account) error {
 			VALUES ($1, $2)
 			RETURNING id, created_at;
 	`, account.Email, account.Password).Scan(&account.ID, &account.CreatedAt)
-
 	if err != nil && err != sql.ErrNoRows {
 		return err
 	}
@@ -35,7 +34,6 @@ func (p *Postgres) GetByEmail(account *models.Account) (*models.Account, error) 
 	acc := new(models.Account)
 
 	rows := p.DB.QueryRow("SELECT * FROM public.account WHERE email=$1", account.Email)
-
 	if rows.Err() != nil {
 		return nil, rows.Err()
 	}

@@ -9,9 +9,9 @@
 			"logOutput": "dap",
 			"program": "${workspaceFolder}/cmd/main.go",
 			"env": {
-				"APP_NAME": "",
-				"HTTP_PORT": "",
-				"DB_CONNECTION": "postgresql://NAME:PASSWORD@HOST:PORT/DB_NAME?sslmode=disable"
+				"APP_NAME": "Pretty Link",
+				"HTTP_PORT": "8080",
+				"DB_CONNECTION": "postgresql://tony:tony@localhost:5432/prettylink?sslmode=disable"
 			},
 			"args": [
 				""
