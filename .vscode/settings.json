@@ -1,7 +1,5 @@
 {
-	"files.exclude": {
-		// "**/*.example.json": true,
-	},
+	"files.exclude": {},
 	"task.autoDetect": "off",
 	"editor.formatOnSave": true,
 	"editor.formatOnPaste": true,

@@ -1,7 +1,8 @@
-package application
+package app
 
 import (
 	"database/sql"
+	"log/slog"
 	"net/http"
 
 	"github.com/desulaidovich/pretty-link/auth/api"
@@ -12,6 +13,7 @@ import (
 
 type Application struct {
 	*config.Config
+	*slog.Logger
 }
 
 func New(options ...func(*Application)) *Application {
@@ -29,7 +31,7 @@ func WithConfig(cfg *config.Config) func(*Application) {
 	}
 }
 
-func (app *Application) Run() error {
+func (app *Application) Serve() error {
 	db, err := sql.Open("pgx", app.ConnectionString)
 	if err != nil {
 		return err

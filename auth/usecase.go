@@ -1,6 +1,8 @@
 package auth
 
+import "github.com/desulaidovich/pretty-link/internal/fail"
+
 type UseCase interface {
-	SignIn(email, password string) error
-	SignUp(email, password string) error
+	SignIn(email, password string) *fail.Fail
+	SignUp(email, password string) *fail.Fail
 }

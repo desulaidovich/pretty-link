@@ -4,6 +4,8 @@ import (
 	"database/sql"
 
 	"github.com/desulaidovich/pretty-link/auth/models"
+	"github.com/desulaidovich/pretty-link/internal/fail"
+	"github.com/desulaidovich/pretty-link/internal/sqlstate"
 )
 
 type Postgres struct {
@@ -13,27 +15,28 @@ type Postgres struct {
 func (sql *Postgres) New(db *sql.DB) *Postgres {
 	postgres := new(Postgres)
 	postgres.DB = db
-
 	return postgres
 }
 
-func (p *Postgres) Create(account *models.Account) error {
+func (p *Postgres) Create(account *models.Account) *fail.Fail {
 	err := p.DB.QueryRow(`
-			INSERT INTO public.account (email, password)
-			VALUES ($1, $2)
-			RETURNING id, created_at;
+		INSERT INTO public.account (email, password)
+		VALUES ($1, $2)
+		RETURNING id, created_at;
 	`, account.Email, account.Password).Scan(&account.ID, &account.CreatedAt)
+
 	if err != nil && err != sql.ErrNoRows {
-		return err
+		return sqlstate.ErrNo(err)
 	}
 
 	return nil
 }
 
+// TODO: handle error codes
 func (p *Postgres) GetByEmail(account *models.Account) (*models.Account, error) {
 	acc := new(models.Account)
 
-	rows := p.DB.QueryRow("SELECT * FROM public.account WHERE email=$1", account.Email)
+	rows := p.DB.QueryRow("SELECT * FROM public.account WHERE email=$1;", account.Email)
 	if rows.Err() != nil {
 		return nil, rows.Err()
 	}

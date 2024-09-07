@@ -54,12 +54,12 @@
 		"env": {
 			"APP_NAME": "Pretty link",
 			"HTTP_PORT": "8080",
-			"DB_CONNECTION": "postgresql://tony:tony@localhost:5432/prettylink?sslmode=disable",
+			"DB_CONNECTION": "postgresql://${input:dbUser}:${input:dbUserPassword}@${input:dbHost}:${input:dbPort}/${input:dbName}?sslmode=disable",
 		}
 	},
 	"tasks": [
 		{
-			"label": "Run\tPretty Link",
+			"label": "Run:\tPretty Link",
 			"detail": "Run application",
 			"icon": {
 				"id": "run"
@@ -67,12 +67,12 @@
 			"command": "go",
 			"args": [
 				"run",
-				"${workspaceFolder}/cmd/main.go"
+				"${workspaceFolder}/cmd/app/main.go"
 			],
 			"group": "build",
 		},
 		{
-			"label": "Goose\tDatabase",
+			"label": "Goose:\tDatabase",
 			"detail": "Migrate to database 🪿",
 			"icon": {
 				"id": "database"
