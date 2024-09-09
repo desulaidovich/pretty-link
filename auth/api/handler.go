@@ -1,11 +1,11 @@
 package api
 
 import (
-	"encoding/json"
-	"io"
 	"net/http"
 
 	"github.com/desulaidovich/pretty-link/auth"
+	"github.com/desulaidovich/pretty-link/internal/fail"
+	"github.com/desulaidovich/pretty-link/internal/render"
 )
 
 type AuthHandler struct {
@@ -24,50 +24,60 @@ type reqeust struct {
 	Password string `json:"password"`
 }
 
+type response struct {
+	Code    int    `json:"code,omitempty"`
+	Message string `json:"message,omitempty"`
+	Token   string `json:"token,omitempty"`
+}
+
 func (auth *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
-	body, err := io.ReadAll(r.Body)
+	req, err := render.Bind[reqeust](r)
 
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		failed := fail.New(fail.InvalidRequestJSON)
+
+		render.Render(&response{
+			Code:    failed.Code(),
+			Message: failed.Message(),
+		}, failed.HTTPStatusCode(), w)
 		return
 	}
 
-	defer r.Body.Close()
-
-	var req reqeust
-	if err := json.Unmarshal(body, &req); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+	if failed := auth.usecase.SignUp(req.Email, req.Password); failed != nil {
+		render.Render(&response{
+			Code:    failed.Code(),
+			Message: failed.Message(),
+		}, failed.HTTPStatusCode(), w)
 		return
 	}
 
-	if err := auth.usecase.SignUp(req.Email, req.Password); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
+	render.Render(&response{
+		Message: "Welcome to the club, buddy",
+	}, http.StatusOK, w)
 }
 
 func (auth *AuthHandler) SignIn(w http.ResponseWriter, r *http.Request) {
-	body, err := io.ReadAll(r.Body)
+	req, err := render.Bind[reqeust](r)
 
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		failed := fail.New(fail.InvalidRequestJSON)
+
+		render.Render(&response{
+			Code:    failed.Code(),
+			Message: failed.Message(),
+		}, failed.HTTPStatusCode(), w)
 		return
 	}
 
-	defer r.Body.Close()
-
-	var req reqeust
-	if err := json.Unmarshal(body, &req); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+	if failed := auth.usecase.SignIn(req.Email, req.Password); failed != nil {
+		render.Render(&response{
+			Code:    failed.Code(),
+			Message: failed.Message(),
+		}, failed.HTTPStatusCode(), w)
 		return
 	}
 
-	if err := auth.usecase.SignIn(req.Email, req.Password); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
+	render.Render(&response{
+		Token: "Alohomora",
+	}, http.StatusOK, w)
 }

@@ -1,17 +1,54 @@
 {
 	"version": "0.2.0",
+	"inputs": [
+		{
+			"id": "dbHost",
+			"description": "Database host",
+			"default": "localhost",
+			"type": "promptString"
+		},
+		{
+			"id": "dbPort",
+			"description": "Database port",
+			"default": "5432",
+			"type": "promptString"
+		},
+		{
+			"id": "dbName",
+			"description": "Database name",
+			"default": "prettylink",
+			"type": "promptString"
+		},
+		{
+			"id": "dbUser",
+			"description": "Database user",
+			"default": "tony",
+			"type": "promptString"
+		},
+		{
+			"id": "dbUserPassword",
+			"password": true,
+			"description": "Database user password",
+			"default": "tony",
+			"type": "promptString"
+		},
+	],
 	"configurations": [
 		{
-			"name": "Run: Pretty Link",
+			"name": "Debug: Pretty Link",
 			"type": "go",
 			"request": "launch",
 			"mode": "auto",
 			"logOutput": "dap",
-			"program": "${workspaceFolder}/cmd/main.go",
-			"envFile": "${workspaceFolder}/.env",
+			"program": "${workspaceFolder}/cmd/app/main.go",
+			"env": {
+				"APP_NAME": "Pretty Link",
+				"HTTP_PORT": "8080",
+				"DB_CONNECTION": "postgresql://${input:dbUser}:${input:dbUserPassword}@${input:dbHost}:${input:dbPort}/${input:dbName}?sslmode=disable"
+			},
 			"args": [
 				""
 			],
 		}
-	]
+	],
 }

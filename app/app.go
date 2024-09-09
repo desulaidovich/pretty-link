@@ -1,53 +1,56 @@
 package app
 
 import (
+	"database/sql"
+	"log/slog"
 	"net/http"
 
 	"github.com/desulaidovich/pretty-link/auth/api"
-	auth "github.com/desulaidovich/pretty-link/auth/usecase"
+	"github.com/desulaidovich/pretty-link/auth/usecase"
 	"github.com/desulaidovich/pretty-link/config"
-
 	_ "github.com/jackc/pgx/v5/stdlib"
-	"github.com/jmoiron/sqlx"
 )
 
-func Run() error {
+type Application struct {
+	*config.Config
+	*slog.Logger
+}
 
-	cfg, err := config.LoadFromEnv()
+func New(options ...func(*Application)) *Application {
+	app := new(Application)
+
+	for _, call := range options {
+		call(app)
+	}
+	return app
+}
+
+func WithConfig(cfg *config.Config) func(*Application) {
+	return func(a *Application) {
+		a.Config = cfg
+	}
+}
+
+func (app *Application) Serve() error {
+	db, err := sql.Open("pgx", app.ConnectionString)
 	if err != nil {
 		return err
 	}
 
-	db, err := connectDB(cfg)
-
-	if err != nil {
+	if err := db.Ping(); err != nil {
 		return err
 	}
-
 	defer db.Close()
 
 	mux := http.NewServeMux()
 
-	authUseCase := auth.New(db)
+	authUseCase := usecase.NewAuthUseCase(db)
 	api.RegisterAuthEndpoints(mux, authUseCase)
 
-	server := new(http.Server)
-	server.Addr = ":" + cfg.Port
-	server.Handler = mux
-
-	if err = server.ListenAndServe(); err != nil {
-		return err
+	server := &http.Server{
+		Addr:    ":" + app.Port,
+		Handler: mux,
 	}
 
-	return nil
-}
-
-func connectDB(cfg *config.Config) (*sqlx.DB, error) {
-	db, err := sqlx.Connect("pgx", cfg.ConnectionString)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return db, nil
+	return server.ListenAndServe()
 }

@@ -25,7 +25,7 @@ pretty-link
 ├── go.mod
 ├── go.sum
 ├── migrations
-│   └── 20240818142323_create_account_table.sql
+│   └── *_table.sql
 └── README.md
 ```
 

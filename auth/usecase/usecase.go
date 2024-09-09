@@ -1,22 +1,19 @@
 package usecase
 
 import (
-	"errors"
+	"database/sql"
 
 	"github.com/desulaidovich/pretty-link/auth/models"
 	"github.com/desulaidovich/pretty-link/auth/repository"
-	"github.com/jmoiron/sqlx"
-)
-
-var (
-	errIncorrectUserPassword = errors.New("incorrect user password")
+	"github.com/desulaidovich/pretty-link/internal/fail"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthUseCase struct {
 	repo *repository.Postgres
 }
 
-func New(db *sqlx.DB) *AuthUseCase {
+func NewAuthUseCase(db *sql.DB) *AuthUseCase {
 	useCase := new(AuthUseCase)
 	postgres := new(repository.Postgres)
 	useCase.repo = postgres.New(db)
@@ -24,31 +21,36 @@ func New(db *sqlx.DB) *AuthUseCase {
 	return useCase
 }
 
-func (auth *AuthUseCase) SignIn(email, password string) error {
+func (auth *AuthUseCase) SignIn(email, password string) *fail.Fail {
 	account := new(models.Account)
 	account.Email = email
 
-	if err := auth.repo.GetByEmail(account); err != nil {
-		return err
+	account, err := auth.repo.GetByEmail(account)
+	if err != nil {
+		return fail.New(fail.AccountIsNotExists)
 	}
 
-	if !account.CheckPasswordHash(password) {
-		return errIncorrectUserPassword
+	err = bcrypt.CompareHashAndPassword(account.Password, []byte(password))
+	if err != nil {
+		return fail.New(fail.IncorrectUserPassword)
 	}
 
 	return nil
 }
 
-func (auth *AuthUseCase) SignUp(email, password string) error {
+func (auth *AuthUseCase) SignUp(email, password string) *fail.Fail {
 	account := new(models.Account)
 	account.Email = email
 
-	if err := account.HashPasswordFromString(password); err != nil {
-		return err
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return fail.New(fail.InvalidUserPassword)
 	}
 
-	if err := auth.repo.Create(account); err != nil {
-		return err
+	account.Password = hash
+
+	if failed := auth.repo.Create(account); failed != nil {
+		return failed
 	}
 
 	return nil

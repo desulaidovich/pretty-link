@@ -1,10 +1,9 @@
 module github.com/desulaidovich/pretty-link
 
-go 1.22.6
+go 1.23.0
 
 require (
 	github.com/jackc/pgx/v5 v5.6.0
-	github.com/jmoiron/sqlx v1.4.0
 	golang.org/x/crypto v0.17.0
 )
 
