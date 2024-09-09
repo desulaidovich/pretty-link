@@ -11,12 +11,10 @@ const (
 	InvalidUserPassword
 )
 
-type (
-	UserErrorData struct {
-		httpStatusCode int
-		message        string
-	}
-)
+type UserErrorData struct {
+	httpStatusCode int
+	message        string
+}
 
 func MessageByID(id int) *UserErrorData {
 	list := map[int]*UserErrorData{
@@ -46,5 +44,8 @@ func MessageByID(id int) *UserErrorData {
 		return key
 	}
 
-	return nil
+	return &UserErrorData {
+		httpStatusCode: http.StatusInternalServerError,
+		message: 		"Internal error"
+	}
 }
